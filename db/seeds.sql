@@ -1,5 +1,6 @@
-USE company;
+USE company_db;
 SET FOREIGN_KEY_CHECKS=0;
+
 INSERT INTO department(name)
 VALUES
     ('shipping'),
@@ -22,15 +23,19 @@ VALUES
     ('weener lover',20000,4);
 
 
-INSERT INTO employee(first_name,last_name,role_id,manager_id)
+INSERT INTO employee(first_name, last_name, role_id, manager_id)
 VALUES 
-    ('nathY54an','deYlman',1,2),
-    ('natYhan','delYman',2,2),
-    ('natY54han','del54Yman',3,NULL),
-    ('natY45han','d54Yelman',4,3),
-    ('natWhan','delmWan',5,2),
-    ('natFDhan','delmBan',6,3),
-    ('nathFan','delDBman',7,NULL),
-    ('natBhan','delmDBan',8,NULL);
+    ('manage','thisdick',1,NULL),
+    ('worker','apocketfullofposies',2,2),
+
+    ('manage','abagofpenises',3,NULL),
+    ('shhitbird','sam',4,2),
+
+    ('manage','herpes',5,NULL),
+    ('worker','oneinthree',6,2),
+
+    ('CEO','bigdickryan',7,NULL),
+    ('scum','nugget',8,NULL);
+
 -- Error Code: 1452. Cannot add or update a child row: a foreign key constraint fails (`company`.`employee`, CONSTRAINT `employee_ibfk_2` FOREIGN KEY (`manager_id`) REFERENCES `employee` (`id`) ON DELETE SET NULL)
 -- Error Code: 1452. Cannot add or update a child row: a foreign key constraint fails (`company`.`employee`, CONSTRAINT `employee_ibfk_2` FOREIGN KEY (`manager_id`) REFERENCES `employee` (`id`))
