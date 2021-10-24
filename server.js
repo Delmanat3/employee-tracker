@@ -124,10 +124,26 @@ function addDept(){
   )
 }
 
+
+
+
+/*async function name([param[, param[, ...param]]]) {
+   statements
+}
+
+promise1
+.then(value => { return value + ' and bar'; })
+.then(value => { return value + ' and bar again'; })
+.then(value => { return value + ' and again'; })
+.then(value => { return value + ' and again'; })
+.then(value => { console.log(value) })
+.catch(err => { console.log(err) });
+ */
+
 /**https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise */
 
 async function chooseRole(){
-db.promise().query('SELECT * FROM role')
+db.query('SELECT * FROM role')
  .then(res =>{
   return res[0].map(role=>{
     return {title: role.title,id:role.id }
