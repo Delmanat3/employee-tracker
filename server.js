@@ -70,8 +70,42 @@ const parter = () => {
         })
     }
 
-    
+function viewEmp(){
+  db.query('SELECT employee.id AS "Employee id", concat(employee.first_name,"  ",employee.last_name ) AS "Employee Name" , role.title AS "Job Title", role.salary AS "Role Salary" ,dept.name AS "Department Name" ,concat(manager.first_name,"  ",manager.last_name) AS "Manager Name" FROM company_db.employee AS employee LEFT JOIN company_db.employee AS manager ON manager.id=employee.manager_id LEFT JOIN company_db.role AS role ON employee.role_id=role.id LEFT JOIN company_db.department AS dept ON dept.id = role.department_id',
+  (err,res)=>{
+    if(res){
+    console.table(res)
+  }else{
+    console.log(`fuck you`, err)
+  }
+  }
+  )
+parter()
+}
 
+function viewRoles(){
+  db.query('SELECT role.title AS "title", role.salary AS "salary", department.name AS "department name" FROM role role LEFT JOIN department AS department ON department.id = role.department_id', 
+  (err,res)=>{
+    if(res){
+  console.table(res)
+    }else{
+      console.log(`fuck off`,err)
+    }
+  })
+   parter()
+}
+
+function viewDept(){
+  db.query('SELECT * FROM department',(err,res)=>{
+    console.log('all departments')
+      console.table(res)
+     }
+     )
+     parter()
+    }
+
+
+parter();
 app.listen(PORT, () => {
     console.log(`jivin on port ${PORT}`);
   });
