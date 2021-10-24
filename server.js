@@ -21,51 +21,50 @@ const db = mysql.createConnection(
 );
 
 const parter = () => {
-    inquirer.prompt(start)
-       .then((answers) =>{
-        switch(answers.options) {
-            case "view all employees":
-              viewEmp()
-              break;
-            case "view all roles":
-              viewRoles()
-              break;
-            case "view all departments":
-              viewDept()
-              break;
-            case "add new employee":
-            addEmp()
-            break;
-            case "add new roles":
-            addRoles()
-            break;
-            case "add new department":
-              addDept();
-              break;
-              case "delete roles":
-                delRole()
-              break;
-            case "delete employee":
-              delEmp()
-              break;
-              case "delete department":
-                delDep()
-                break;
-              case "Update employee role":
-                upEmpRole()
-              break;
-              case "Update employee manager":
-                updateEmpMan()
-                break;
-              case "view employee by manager":
-                viewByMan()
-                break;
-              case "exit":
-                db.end()
-               break;
-
-            default:
-              console.log('how the fuck did you get here... i guess have a cookie you special fuck')
+inquirer.prompt(start)
+  .then((answers) =>{
+    switch(answers.options) {
+      case "view all employees":
+        viewEmp()
+      break;
+      case "view all roles":
+        viewRoles()
+      break;
+      case "view all departments":
+        viewDept()
+      break;
+      case "add new employee":
+        addEmp()
+      break;
+      case "add new roles":
+        addRoles()
+      break;
+      case "add new department":
+        addDept();
+      break;
+      case "delete roles":
+        delRole()
+      break;
+      case "delete employee":
+        delEmp()
+      break;
+      case "delete department":
+        delDep()
+      break;
+      case "Update employee role":
+        upEmpRole()
+      break;
+      case "Update employee manager":
+        updateEmpMan()
+      break;
+      case "view employee by manager":
+        viewByMan()
+      break;
+      case "exit":
+        db.end()
+      break;
+      default:
+        console.log('how the fuck did you get here... i guess have a cookie you special fuck')
           }
         })
     }
@@ -84,7 +83,7 @@ function viewRoles(){
   db.query('SELECT role.title AS "title", role.salary AS "salary", department.name AS "department name" FROM role role LEFT JOIN department AS department ON department.id = role.department_id', 
   (err,res)=>{
     return res ? console.table(res)
-      :console.log(err,'no')
+      :console.log(err,'fuck a large duck')
   })
    parter()
 }
@@ -92,7 +91,7 @@ function viewRoles(){
 function viewDept(){
   db.query('SELECT * FROM department',(err,res)=>{
     return res ? console.table(res)
-     :console.log(err,'bastard')
+     :console.log(err,'did you know ducks are free at the park')
   }
      )
      parter()
@@ -106,57 +105,84 @@ function addDept(){
       description:'enter department name'
   }
   ]).then(option =>{
-    db.query('INSERT INTO department SET?', {name:option.department},(err,res)=>{
+    db.query('INSERT INTO department SET?', 
+    {name:option.department},(err,res)=>{
       if(err){
-        console.log(err)
+        console.log(err,'i have 5 ducks at home')
       }else{
         db.query('SELECT * FROM department',(err,res)=>{
         return res ?  console.table(res)
-        : console.log(err)
-        })
+        : console.log(err,'weeeneer face; i did not i have sexual relations with that duck')
+        }
+      )
       
-        parter()
+      parter()
       }
-    })
-    
-  })
-
+     }
+    )
+   }
+  )
 }
+
 /**https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise */
 
-// function chooseRole(){
-//  db.promise().query('SELECT * FROM role')
-//  .then(function(res){
-//   res[0].map(function(role){
-//     return role.title,role.id
-//   })
+async function chooseRole(){
+db.promise().query('SELECT * FROM role')
+ .then(res =>{
+  return res[0].map(role=>{
+    return {title: role.title,id:role.id }
+  })
 
-//  })
-// }
-  
-// function addEmp(){
-//   const man =  chooseMan()
-//   const role= chooseRole()
-//   inquirer.prompt=([
-//     {
-//     type: 'input',
-//     name: 'first name',
-//     description:'enter employee first name'
-//   },{
-//     type:'input',
-//     name:'last name',
-//     description:'enter employee last name',
-//   },{
-//     type: 'list',
-//     name:'role',
-//     choices:Promise.resolve(role)
-//   },{
-//     type:'list',
-//     name:'choose manager',
-//     choices:Promise.resolve(man)
+ 
+}
+)
+}
 
-//   }
-// ])
+ /* roles and managers need to update if a new one is added */ 
+async function addEmp(){
+  const man =new Promise.resolve(chooseMan())
+  //const role= chooseRole()
+  inquirer.prompt=([
+    {
+    type: 'input',
+    name: 'firstname',
+    description:'enter employee first name'
+  },{
+    type:'input',
+    name:'lastname',
+    description:'enter employee last name',
+  },{
+    type: 'list',
+    name:'role',
+    description:'nopers',
+    choices: new Promise.resolve(chooseRole())
+  },{
+    type:'list',
+    name:'choose manager',
+    description:'fuckers',
+    choices:man
+
+  }
+]).then(function (res) {
+  let roleId = res.role
+  let managerId = res.manager
+
+  console.log({managerId});
+  db.query("INSERT INTO employee SET ?",
+      {
+          first_name: res.firstname,
+          last_name: res.lastname,
+          manager_id: managerId,
+          role_id: roleId
+
+      }, function (err) {
+          if (err) throw err
+          console.table(res)
+          parter();
+      })
+
+})
+}
 //   db.query('',(err,res)=>{
 //     return res ? console.table(res)
 //     :console.log(err,'fuck your entire bloodline')
