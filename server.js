@@ -106,9 +106,17 @@ function addDept(){
       description:'enter department name'
   }
   ]).then(option =>{
-    db.query('INSERT INTO department SET?',`${option.department}`,(err,res)=>{
-      console.log(res)
+    db.query('INSERT INTO department SET?', {name:option.department},(err,res)=>{
+      if(err){
+        console.log(err)
+      }else{
+        db.query('SELECT * FROM department',(err,res)=>{
+        return res ?  console.table(res)
+        : console.log(err)
+        })
+      
         parter()
+      }
     })
     
   })
