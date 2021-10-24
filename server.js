@@ -97,31 +97,63 @@ function viewDept(){
      )
      parter()
     }
-  
-async function addEmp(){
-  const man = await chooseMan()
-  inquirer.prompt=([
-    {
-    type: input,
-    name: 'first name',
-    description:'enter employee first name'
-  },{
-    type:input,
-    name:'last name',
-    description:'enter employee last name',
-  },{
-    type: list,
-    name:'role',
-    choices:[
 
-    ]
+function addDept(){
+  inquirer.prompt([
+    {
+      type:'input',
+      name:'department',
+      description:'enter department name'
   }
-])
-  db.query('',(err,res)=>{
-    return res ? console.table(res)
-    :console.log(err,'fuck your entire bloodline')
+  ]).then(option =>{
+    db.query('INSERT INTO department SET?',`${option.department}`,(err,res)=>{
+      console.log(res)
+        parter()
+    })
+    
   })
+
 }
+/**https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise */
+
+// function chooseRole(){
+//  db.promise().query('SELECT * FROM role')
+//  .then(function(res){
+//   res[0].map(function(role){
+//     return role.title,role.id
+//   })
+
+//  })
+// }
+  
+// function addEmp(){
+//   const man =  chooseMan()
+//   const role= chooseRole()
+//   inquirer.prompt=([
+//     {
+//     type: 'input',
+//     name: 'first name',
+//     description:'enter employee first name'
+//   },{
+//     type:'input',
+//     name:'last name',
+//     description:'enter employee last name',
+//   },{
+//     type: 'list',
+//     name:'role',
+//     choices:Promise.resolve(role)
+//   },{
+//     type:'list',
+//     name:'choose manager',
+//     choices:Promise.resolve(man)
+
+//   }
+// ])
+//   db.query('',(err,res)=>{
+//     return res ? console.table(res)
+//     :console.log(err,'fuck your entire bloodline')
+//   })
+// }
 
 
 parter();
