@@ -3,6 +3,7 @@ const express=require('express');
 const inquirer=require('inquirer');
 const mysql = require('mysql2');
 const start=require('./prompts/start')
+const quer =require('./prompts/adds')
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -142,68 +143,16 @@ promise1
 
 /**https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise */
 
-async function chooseRole(){
-db.query('SELECT * FROM role')
- .then(res =>{
-  return res[0].map(role=>{
-    return {title: role.title,id:role.id }
-  })
 
- 
-}
-)
-}
-
- /* roles and managers need to update if a new one is added */ 
-async function addEmp(){
-  const man =new Promise.resolve(chooseMan())
-  //const role= chooseRole()
-  inquirer.prompt=([
-    {
-    type: 'input',
-    name: 'firstname',
-    description:'enter employee first name'
-  },{
-    type:'input',
-    name:'lastname',
-    description:'enter employee last name',
-  },{
-    type: 'list',
-    name:'role',
-    description:'nopers',
-    choices: new Promise.resolve(chooseRole())
-  },{
-    type:'list',
-    name:'choose manager',
-    description:'fuckers',
-    choices:man
-
-  }
-]).then(function (res) {
-  let roleId = res.role
-  let managerId = res.manager
-
-  console.log({managerId});
-  db.query("INSERT INTO employee SET ?",
-      {
-          first_name: res.firstname,
-          last_name: res.lastname,
-          manager_id: managerId,
-          role_id: roleId
-
-      }, function (err) {
-          if (err) throw err
-          console.table(res)
-          parter();
-      })
-
-})
-}
-//   db.query('',(err,res)=>{
-//     return res ? console.table(res)
-//     :console.log(err,'fuck your entire bloodline')
-//   })
-// }
+//  const map = function(arr, cb){
+//        const newArr = [];
+//        for (let i = 0; i < arr.length; i++){
+//            const newElem = cb(arr[i]);
+//            newArr.push(newElem);
+//      }
+//       return newArr;
+//    }
+  
 
 
 parter();
