@@ -3,7 +3,7 @@ const express=require('express');
 const inquirer=require('inquirer');
 const mysql = require('mysql2');
 const start=require('./prompts/start')
-const quer =require('./prompts/adds')
+
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -38,7 +38,7 @@ inquirer.prompt(start)
         addEmp()
       break;
       case "add new roles":
-        addRoles()
+        addRole()
       break;
       case "add new department":
         addDept();
@@ -71,7 +71,7 @@ inquirer.prompt(start)
     }
 
 function viewEmp(){
-  db.query('SELECT employee.id AS "Employee id", concat(employee.first_name,"  ",employee.last_name ) AS "Employee Name" , role.title AS "Job Title", role.salary AS "Role Salary" ,dept.name AS "Department Name" ,concat(manager.first_name,"  ",manager.last_name) AS "Manager Name" FROM company_db.employee AS employee LEFT JOIN company_db.employee AS manager ON manager.id=employee.manager_id LEFT JOIN company_db.role AS role ON employee.role_id=role.id LEFT JOIN company_db.department AS dept ON dept.id = role.department_id',
+  db.query('SELECT employee.id AS "Employee id", concat(employee.first_name,"  ",employee.last_name ) AS "Employee Name" , role.title AS "Title", role.salary AS "Role Salary" ,dept.name AS "Department Name" ,concat(manager.first_name,"  ",manager.last_name) AS "Manager Name" FROM company_db.employee AS employee LEFT JOIN company_db.employee AS manager ON manager.id=employee.manager_id LEFT JOIN company_db.role AS role ON employee.role_id=role.id LEFT JOIN company_db.department AS dept ON dept.id = role.department_id',
   (err,res)=>{
     return res ? console.table(res)
       :console.log(err,'fuck a small duck')
@@ -125,34 +125,48 @@ function addDept(){
   )
 }
 
+function addRole(){
+  db.query('SELECT id FROM company_db.department',(err,res)=>{
+    if(err){
+      console.log(err)
+    }else{
+      let arr1=[]
+      for(i=0; i < res.length; i++){
+        arr1.push(res[i].id)
+      }
+      inquirer.prompt([
+        {type:'input',
+         name:'title',
+         message:'enter title of new role'
+      },{
+        type:'input',
+        name:'salary',
+        message:'enter salary no commas or periods '
+      },{
+        type:'list',
+        name:'dept',
+        message:'choose dept role belongs to: 1 for shp , 2 for prod ,3 for manuf, 4 for ween',
+        choices:arr1
 
-
-
-/*async function name([param[, param[, ...param]]]) {
-   statements
+      }
+      ]).then((option)=>{
+        db.query(`INSERT INTO role (title,salary,department_id) VALUES ("${option.title}" , ${option.salary} , ${option.dept})`,(err,res)=>{
+          if(err){
+            console.log(err)
+          }else{
+          db.query('SELECT * FROM role',(err,res)=>{
+            return res ?  console.table(res)
+            : console.log(err,'weeeneer face; i did not i have sexual relations with that duck')
+            }
+          )
+          }
+        }
+        )
+        parter()
+      })
+  }
+})   
 }
-
-promise1
-.then(value => { return value + ' and bar'; })
-.then(value => { return value + ' and bar again'; })
-.then(value => { return value + ' and again'; })
-.then(value => { return value + ' and again'; })
-.then(value => { console.log(value) })
-.catch(err => { console.log(err) });
- */
-
-/**https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise */
-
-
-//  const map = function(arr, cb){
-//        const newArr = [];
-//        for (let i = 0; i < arr.length; i++){
-//            const newElem = cb(arr[i]);
-//            newArr.push(newElem);
-//      }
-//       return newArr;
-//    }
-  
 
 
 parter();
